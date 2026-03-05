@@ -1,0 +1,37 @@
+package org.example.repository;
+
+import org.example.entity.Product;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+public class ProductRepo {
+
+    private final List<Product> products;
+
+    public ProductRepo() {
+        products = new ArrayList<>();
+    }
+
+    public ProductRepo(List<Product> products) {
+        this.products = products;
+    }
+
+    public void add(Product product){
+        products.add(product);
+    }
+    public void deleteById(int id){
+        products.removeIf(p ->p.id() == id);
+    }
+
+    public Optional<Product> findById(int id){
+        return products.stream()
+                .filter(product -> product.id() == id)
+                .findFirst();
+    }
+
+    public List<Product> findAll(){
+        return List.copyOf(products);
+    }
+}
