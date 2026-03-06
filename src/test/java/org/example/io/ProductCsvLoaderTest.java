@@ -10,7 +10,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ProductCsvLoaderTest {
 
@@ -28,8 +27,8 @@ class ProductCsvLoaderTest {
         assertThat(products)
                 .isNotEmpty()
                 .hasSize(34)
-                .contains(new Product(1001, "Repair Shampoo Argan Oil", new BigDecimal("4.99")))
-                .contains(new Product(8004, "Baby Diapers Size 2 (44pcs)", new BigDecimal("9.49")));
+                .contains(new Product(1001, "Repair Shampoo Argan Oil", new BigDecimal("4.99"), 99))
+                .contains(new Product(8004, "Baby Diapers Size 2 (44pcs)", new BigDecimal("9.49"), 12));
     }
 
     @Test
