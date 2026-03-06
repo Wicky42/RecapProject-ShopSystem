@@ -4,14 +4,10 @@ import org.example.entity.Order;
 import org.example.entity.Product;
 import org.example.io.ProductCsvLoader;
 import org.example.repository.OrderListRepo;
-import org.example.repository.OrderMapRepo;
-import org.example.repository.OrderRepoInterface;
 import org.example.repository.ProductRepo;
 import org.example.service.ShopService;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -45,10 +41,12 @@ public class Main {
         System.out.println();
 
         for (Product product : productRepo.findAll()) {
-            System.out.printf("ID: %d | %-35s | %6.2f €%n",
-                    product.id(),
-                    product.name(),
-                    product.price());
+            if(product.availablitity() != 0) {
+                System.out.printf("ID: %d | %-35s | %6.2f €%n",
+                        product.id(),
+                        product.name(),
+                        product.price());
+            }
         }
 
         System.out.println();
@@ -90,7 +88,7 @@ public class Main {
         System.out.println("Bitte versuchen Sie es erneut.");
     }
 
-    public static void main(String[] args) throws IOException {
+    static void main(String[] args) throws IOException {
         ProductCsvLoader loader = new ProductCsvLoader();
 
         ProductRepo productRepo = new ProductRepo();
