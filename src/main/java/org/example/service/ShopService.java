@@ -20,7 +20,7 @@ public class ShopService {
         this.orderRepo = orderListRepo;
     }
 
-    public Order newOrder(Integer... ids){
+    public Order newOrder(Integer ...ids){
         List<Product> products = new ArrayList<>();
         for(Integer id : ids){
             Product toAdd = productRepo.findById(id)

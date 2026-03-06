@@ -1,7 +1,9 @@
 package org.example;
 
+import org.example.entity.Order;
 import org.example.entity.Product;
 import org.example.io.ProductCsvLoader;
+import org.example.repository.OrderListRepo;
 import org.example.repository.OrderMapRepo;
 import org.example.repository.OrderRepoInterface;
 import org.example.repository.ProductRepo;
@@ -10,34 +12,94 @@ import org.example.service.ShopService;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
-    static void main() throws IOException {
+    private final ProductRepo productRepo;
+    private final ShopService shopService;
+    private final Scanner scanner;
 
-        ProductCsvLoader productCsvLoader = new ProductCsvLoader();
+    public Main(ProductRepo productRepo, ShopService shopService) {
+        this.productRepo = productRepo;
+        this.shopService = shopService;
+        this.scanner = new Scanner(System.in);
+    }
 
-        Product p1 = new Product(2039, "Topfpflanze", BigDecimal.valueOf(3.99));
-        Product p2 = new Product(2384, "Adventskalender", BigDecimal.valueOf(14.99));
-        Product p3 = new Product(1891, "Pizza", BigDecimal.valueOf(4.59));
-        Product p4 = new Product(3697, "Erdbeeren", BigDecimal.valueOf(3.95));
+    public void run() {
+        showCatalog();
 
-        List<Product> products = new ArrayList<>();
-        // Try import List from CSV
-        List<Product> importedList = productCsvLoader.load("productCatalog.csv");
-        products.add(p1);
-        products.add(p2);
-        products.add(p3);
-        products.add(p4);
+        try {
+            List<Integer> productIds = readProductIds();
+            Order order = createOrder(productIds);
+            printSuccessMessage(order);
+        } catch (IllegalArgumentException e) {
+            printErrorMessage();
+        }
+    }
 
-        ProductRepo prodRepo = new ProductRepo(products);
-        OrderRepoInterface orderRepo = new OrderMapRepo();
+    private void showCatalog() {
+        System.out.println("Willkommen in unserem Shop!");
+        System.out.println("Verfügbare Produkte:");
+        System.out.println();
 
-        ShopService shopService = new ShopService(prodRepo, orderRepo);
+        for (Product product : productRepo.findAll()) {
+            System.out.printf("ID: %d | %-35s | %6.2f €%n",
+                    product.id(),
+                    product.name(),
+                    product.price());
+        }
 
-        shopService.newOrder(2039, 3697);
-        System.out.println(orderRepo.findAll());
+        System.out.println();
+        System.out.println("Bitte geben Sie die Produkt-IDs ein, getrennt durch Komma:");
+    }
 
+    private List<Integer> readProductIds() {
+        String input = scanner.nextLine();
 
+        return Arrays.stream(input.split(","))
+                .map(String::trim)
+                .map(Integer::parseInt)
+                .toList();
+    }
+
+    private Order createOrder(List<Integer> productIds) {
+        return shopService.newOrder(productIds.toArray(new Integer[0]));
+    }
+
+    private void printSuccessMessage(Order order) {
+        System.out.println();
+        System.out.println("Ihre Bestellung wurde erfolgreich erstellt.");
+        System.out.println("Hier ist eine Übersicht der bestellten Artikel:");
+
+        for (Product product : order.products()) {
+            System.out.printf("- %s (%d): %.2f €%n",
+                    product.name(),
+                    product.id(),
+                    product.price());
+        }
+
+        System.out.println("----------------------------------------");
+        System.out.printf("Gesamtpreis: %.2f €%n", order.total());
+    }
+
+    private void printErrorMessage() {
+        System.out.println();
+        System.out.println("Das Produkt / die Produkte konnten nicht gefunden werden.");
+        System.out.println("Bitte versuchen Sie es erneut.");
+    }
+
+    public static void main(String[] args) throws IOException {
+        ProductCsvLoader loader = new ProductCsvLoader();
+
+        ProductRepo productRepo = new ProductRepo();
+        loader.load("productCatalog.csv").forEach(productRepo::add);
+
+        OrderListRepo orderRepo = new OrderListRepo();
+        ShopService shopService = new ShopService(productRepo, orderRepo);
+
+        Main app = new Main(productRepo, shopService);
+        app.run();
     }
 }
