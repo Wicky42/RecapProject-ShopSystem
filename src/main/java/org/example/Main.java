@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.entity.Order;
+import org.example.entity.OrderItem;
 import org.example.entity.Product;
 import org.example.io.ProductCsvLoader;
 import org.example.repository.OrderListRepo;
@@ -30,6 +31,11 @@ public class Main {
             List<Integer> productIds = readProductIds();
             Order order = createOrder(productIds);
             printSuccessMessage(order);
+            System.out.println("Weitere Bestellung aufgeben?  Y: ja: N : beenden");
+            String tmp = scanner.nextLine();
+            if(tmp.equals("Y")){
+                run();
+            }
         } catch (IllegalArgumentException e) {
             printErrorMessage();
         }
@@ -42,10 +48,11 @@ public class Main {
 
         for (Product product : productRepo.findAll()) {
             if(product.availablitity() != 0) {
-                System.out.printf("ID: %d | %-35s | %6.2f €%n",
+                System.out.printf("ID: %d | %-35s | %6.2f € | %d %n",
                         product.id(),
                         product.name(),
-                        product.price());
+                        product.price(),
+                        product.availablitity());
             }
         }
 
@@ -71,12 +78,14 @@ public class Main {
         System.out.println("Ihre Bestellung wurde erfolgreich erstellt.");
         System.out.println("Hier ist eine Übersicht der bestellten Artikel:");
 
-        for (Product product : order.products()) {
-            System.out.printf("- %s (%d): %.2f €%n",
-                    product.name(),
-                    product.id(),
-                    product.price());
-        }
+        order.items()
+                .forEach(item ->
+                        System.out.printf("- %s (%d) x%d: %.2f €%n",
+                                item.product().name(),
+                                item.product().id(),
+                                item.quantity(),
+                                item.product().price())
+                );
 
         System.out.println("----------------------------------------");
         System.out.printf("Gesamtpreis: %.2f €%n", order.total());
@@ -99,5 +108,7 @@ public class Main {
 
         Main app = new Main(productRepo, shopService);
         app.run();
+
+
     }
 }
