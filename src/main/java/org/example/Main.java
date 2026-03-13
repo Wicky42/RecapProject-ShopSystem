@@ -89,6 +89,8 @@ public class Main {
 
         System.out.println("----------------------------------------");
         System.out.printf("Gesamtpreis: %.2f €%n", order.total());
+        System.out.printf("Zeitpunkt Ihrer Bestellung: " + order.timeStamp() + "%n" );
+
     }
 
     private void printErrorMessage() {

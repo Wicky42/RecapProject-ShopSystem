@@ -39,4 +39,10 @@ public class OrderListRepo implements OrderRepoInterface{
         return List.copyOf(orders);
     }
 
+    @Override
+    public void update(Order shippedOrder) {
+        orders.removeIf(o -> o.id() == shippedOrder.id());
+        orders.add(shippedOrder);
+    }
+
 }

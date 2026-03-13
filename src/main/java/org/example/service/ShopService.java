@@ -2,14 +2,14 @@ package org.example.service;
 
 import org.example.entity.Order;
 import org.example.entity.OrderItem;
+import org.example.entity.OrderStatus;
 import org.example.entity.Product;
+import org.example.entity.exceptions.OrderNotFoundException;
 import org.example.repository.OrderRepoInterface;
 import org.example.repository.ProductRepo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.ZonedDateTime;
+import java.util.*;
 
 public class ShopService {
 
@@ -18,9 +18,9 @@ public class ShopService {
 
     private static int nextOrderId = 12345;
 
-    public ShopService(ProductRepo productRepo, OrderRepoInterface orderListRepo) {
+    public ShopService(ProductRepo productRepo, OrderRepoInterface orderRepo) {
         this.productRepo = productRepo;
-        this.orderRepo = orderListRepo;
+        this.orderRepo = orderRepo;
     }
 
     public Order newOrder(Integer... ids) {
@@ -46,10 +46,34 @@ public class ShopService {
             items.add(new OrderItem(product, quantity));
         }
 
-        Order order = new Order(nextOrderId++, items);
+        Order order = new Order(nextOrderId++, items, ZonedDateTime.now(), OrderStatus.PROCESSING);
         orderRepo.add(order);
 
         return order;
     }
 
+
+    public List<Order> getOrdersWithStatus(OrderStatus orderStatus) {
+        return orderRepo.findAll().stream()
+                .filter(o -> o.orderStatus() == orderStatus)
+                .toList();
+    }
+
+    public Order shipOrder(int id){
+        Order order = orderRepo.findById(id)
+                .orElseThrow(OrderNotFoundException::new);
+        Order shippedOrder = order.ship();
+        orderRepo.update(shippedOrder);
+
+        return shippedOrder;
+    }
+
+    public Order completeOrder(int id){
+        Order order = orderRepo.findById(id)
+                .orElseThrow(OrderNotFoundException::new);
+        Order completedOrder = order.complete();
+        orderRepo.update(completedOrder);
+
+        return completedOrder;
+    }
 }

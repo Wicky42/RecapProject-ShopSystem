@@ -14,5 +14,5 @@ public interface OrderRepoInterface {
     Optional<Order> findById(int id);
     List<Order> findAll();
 
-
+    void update(Order shippedOrder);
 }
