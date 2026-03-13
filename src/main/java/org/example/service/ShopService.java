@@ -8,6 +8,7 @@ import org.example.entity.exceptions.OrderNotFoundException;
 import org.example.repository.OrderRepoInterface;
 import org.example.repository.ProductRepo;
 
+import java.time.ZonedDateTime;
 import java.util.*;
 
 public class ShopService {
@@ -45,7 +46,7 @@ public class ShopService {
             items.add(new OrderItem(product, quantity));
         }
 
-        Order order = new Order(nextOrderId++, items, OrderStatus.PROCESSING);
+        Order order = new Order(nextOrderId++, items, ZonedDateTime.now(), OrderStatus.PROCESSING);
         orderRepo.add(order);
 
         return order;
