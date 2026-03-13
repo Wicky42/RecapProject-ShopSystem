@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.entity.Order;
 import org.example.entity.OrderItem;
+import org.example.entity.OrderStatus;
 import org.example.entity.Product;
 import org.example.repository.OrderRepoInterface;
 import org.example.repository.ProductRepo;
@@ -46,7 +47,7 @@ public class ShopService {
             items.add(new OrderItem(product, quantity));
         }
 
-        Order order = new Order(nextOrderId++, items);
+        Order order = new Order(nextOrderId++, items, OrderStatus.PROCESSING);
         orderRepo.add(order);
 
         return order;
