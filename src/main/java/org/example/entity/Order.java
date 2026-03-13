@@ -5,7 +5,8 @@ import java.util.List;
 
 public record Order(
         int id,
-        List<OrderItem> items
+        List<OrderItem> items,
+        OrderStatus orderStatus
 ) {
 
     public BigDecimal total(){
