@@ -5,12 +5,12 @@ import java.util.List;
 
 public record Order(
         int id,
-        List<Product> products
+        List<OrderItem> items
 ) {
 
     public BigDecimal total(){
-        return products.stream()
-                .map(Product::price)
+        return items.stream()
+                .map(OrderItem::subtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

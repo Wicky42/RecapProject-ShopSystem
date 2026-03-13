@@ -34,4 +34,14 @@ public class ProductRepo {
     public List<Product> findAll(){
         return List.copyOf(products);
     }
+
+    public void update(Product updatedProduct) {
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).id() == updatedProduct.id()) {
+                products.set(i, updatedProduct);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Product not found: " + updatedProduct.id());
+    }
 }

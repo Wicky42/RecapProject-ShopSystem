@@ -27,9 +27,9 @@ class ShopServiceTest {
 
     @Test
     void newOrder_shouldIncreaseOrderRepo_whenPlacedAValidOrder(){
-        productRepo.add(new Product(1, "Laptop", BigDecimal.TEN));
+        productRepo.add(new Product(1, "Laptop", BigDecimal.TEN, 99));
         Order order = service.newOrder(1);
-        assertEquals(1, order.products().size());
+        assertEquals(1, order.items().size());
     }
 
     @Test

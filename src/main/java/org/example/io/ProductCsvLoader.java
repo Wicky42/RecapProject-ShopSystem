@@ -33,7 +33,8 @@ public class ProductCsvLoader {
         int id = Integer.parseInt(parts[0]);
         String name = parts[1];
         BigDecimal price = new BigDecimal(parts[2]);
+        int availability = Integer.parseInt(parts[3]);
 
-        return new Product(id, name, price);
+        return new Product(id, name, price, availability);
     }
 }
