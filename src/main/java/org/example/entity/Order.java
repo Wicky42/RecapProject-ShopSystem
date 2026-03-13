@@ -16,16 +16,10 @@ public record Order(
     }
 
     public Order ship(){
-        if( orderStatus != OrderStatus.PROCESSING){
-            throw new IllegalStateException("Nur Bestellungen in Verarbeitung können verschickt werden");
-        }
-        return new Order(id, items, OrderStatus.IN_DELIVERY);
+        return new Order(id, items, orderStatus.ship());
     }
 
     public Order complete(){
-        if( orderStatus != OrderStatus.IN_DELIVERY){
-            throw new IllegalStateException("Nur Bestellungen in Zusellung können abgeschlossen werden");
-        }
-        return new Order(id, items, OrderStatus.COMPLETED);
+        return new Order(id, items, orderStatus.complete());
     }
 }

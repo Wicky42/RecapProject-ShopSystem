@@ -66,4 +66,13 @@ public class ShopService {
 
         return shippedOrder;
     }
+
+    public Order completeOrder(int id){
+        Order order = orderRepo.findById(id)
+                .orElseThrow(OrderNotFoundException::new);
+        Order completedOrder = order.complete();
+        orderRepo.update(completedOrder);
+
+        return completedOrder;
+    }
 }
