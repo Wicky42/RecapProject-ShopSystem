@@ -48,7 +48,15 @@ class ShopServiceTest {
         assertEquals(2, service.getOrdersWithStatus(OrderStatus.PROCESSING).size());
         assertTrue(service.getOrdersWithStatus(OrderStatus.PROCESSING).contains(order1));
         assertTrue(service.getOrdersWithStatus(OrderStatus.PROCESSING).contains(order2));
+    }
 
+    @Test
+    void shipOrder_shouldChangeOrderStatusOfOrder(){
+        productRepo.add(new Product(1, "Laptop", BigDecimal.TEN, 99));
+        Order order = service.newOrder(1);
+        Order shipped = service.shipOrder(order.id());
+        assertEquals(1, service.getOrdersWithStatus(OrderStatus.IN_DELIVERY).size());
+        assertTrue(service.getOrdersWithStatus(OrderStatus.IN_DELIVERY).contains(shipped));
     }
 
 }

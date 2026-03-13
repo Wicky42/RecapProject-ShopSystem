@@ -4,6 +4,7 @@ import org.example.entity.Order;
 import org.example.entity.OrderItem;
 import org.example.entity.OrderStatus;
 import org.example.entity.Product;
+import org.example.entity.exceptions.OrderNotFoundException;
 import org.example.repository.OrderRepoInterface;
 import org.example.repository.ProductRepo;
 
@@ -55,5 +56,14 @@ public class ShopService {
         return orderRepo.findAll().stream()
                 .filter(o -> o.orderStatus() == orderStatus)
                 .toList();
+    }
+
+    public Order shipOrder(int id){
+        Order order = orderRepo.findById(id)
+                .orElseThrow(OrderNotFoundException::new);
+        Order shippedOrder = order.ship();
+        orderRepo.update(shippedOrder);
+
+        return shippedOrder;
     }
 }

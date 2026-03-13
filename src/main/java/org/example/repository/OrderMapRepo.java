@@ -37,4 +37,9 @@ public class OrderMapRepo implements OrderRepoInterface{
     public List<Order> findAll() {
         return List.copyOf(orders.values());
     }
+
+    @Override
+    public void update(Order order) {
+        orders.put(order.id(), order);
+    }
 }
