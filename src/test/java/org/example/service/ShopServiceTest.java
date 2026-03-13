@@ -59,4 +59,14 @@ class ShopServiceTest {
         assertTrue(service.getOrdersWithStatus(OrderStatus.IN_DELIVERY).contains(shipped));
     }
 
+    @Test
+    void completeOrder_shouldChangeOrderStatusOfOrder(){
+        productRepo.add(new Product(1, "Laptop", BigDecimal.TEN, 99));
+        Order order = service.newOrder(1);
+        Order shipped = service.shipOrder(order.id());
+        Order completedOrder = service.completeOrder(shipped.id());
+        assertEquals(1, service.getOrdersWithStatus(OrderStatus.COMPLETED).size());
+        assertTrue(service.getOrdersWithStatus(OrderStatus.COMPLETED).contains(completedOrder));
+    }
+
 }
