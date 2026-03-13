@@ -7,10 +7,7 @@ import org.example.entity.Product;
 import org.example.repository.OrderRepoInterface;
 import org.example.repository.ProductRepo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ShopService {
 
@@ -19,9 +16,9 @@ public class ShopService {
 
     private static int nextOrderId = 12345;
 
-    public ShopService(ProductRepo productRepo, OrderRepoInterface orderListRepo) {
+    public ShopService(ProductRepo productRepo, OrderRepoInterface orderRepo) {
         this.productRepo = productRepo;
-        this.orderRepo = orderListRepo;
+        this.orderRepo = orderRepo;
     }
 
     public Order newOrder(Integer... ids) {
@@ -53,4 +50,10 @@ public class ShopService {
         return order;
     }
 
+
+    public List<Order> getOrdersWithStatus(OrderStatus orderStatus) {
+        return orderRepo.findAll().stream()
+                .filter(o -> o.orderStatus() == orderStatus)
+                .toList();
+    }
 }

@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.entity.Order;
+import org.example.entity.OrderStatus;
 import org.example.entity.Product;
 import org.example.repository.OrderListRepo;
 import org.example.repository.ProductRepo;
@@ -35,6 +36,19 @@ class ShopServiceTest {
     @Test
     void newOrder_shouldThrowException_whenProductMissing(){
         assertThrows(IllegalArgumentException.class , () -> service.newOrder(99));
+    }
+
+    @Test
+    void getOrdersWithStatus_shouldreturnAListOfOrdersWithCallesStatus(){
+        productRepo.add(new Product(1, "Laptop", BigDecimal.TEN, 99));
+        productRepo.add(new Product(2, "Phone", BigDecimal.valueOf(699.99), 99));
+        Order order1 = service.newOrder(1);
+        Order order2= service.newOrder(2);
+
+        assertEquals(2, service.getOrdersWithStatus(OrderStatus.PROCESSING).size());
+        assertTrue(service.getOrdersWithStatus(OrderStatus.PROCESSING).contains(order1));
+        assertTrue(service.getOrdersWithStatus(OrderStatus.PROCESSING).contains(order2));
+
     }
 
 }
