@@ -25,7 +25,7 @@ class OrderMapRepoTest {
 
     @Test
     void update_shouldNotChangeTimeStamp() {
-        Product product1 = new Product(1,"product", BigDecimal.TEN, 10);
+        Product product1 = new Product("1","product", BigDecimal.TEN, 10);
         Order order = new Order(1, List.of(new OrderItem(product1, 2)), ZonedDateTime.now(), OrderStatus.PROCESSING);
         repo.add(order);
         repo.update(order);

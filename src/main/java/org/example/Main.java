@@ -1,7 +1,6 @@
 package org.example;
 
 import org.example.entity.Order;
-import org.example.entity.OrderItem;
 import org.example.entity.Product;
 import org.example.io.ProductCsvLoader;
 import org.example.repository.OrderListRepo;
@@ -28,7 +27,7 @@ public class Main {
         showCatalog();
 
         try {
-            List<Integer> productIds = readProductIds();
+            List<String> productIds = readProductIds();
             Order order = createOrder(productIds);
             printSuccessMessage(order);
             System.out.println("Weitere Bestellung aufgeben?  Y: ja: N : beenden");
@@ -48,7 +47,7 @@ public class Main {
 
         for (Product product : productRepo.findAll()) {
             if(product.availablitity() != 0) {
-                System.out.printf("ID: %d | %-35s | %6.2f € | %d %n",
+                System.out.printf("ID: %s | %-35s | %6.2f € | %d %n",
                         product.id(),
                         product.name(),
                         product.price(),
@@ -60,17 +59,16 @@ public class Main {
         System.out.println("Bitte geben Sie die Produkt-IDs ein, getrennt durch Komma:");
     }
 
-    private List<Integer> readProductIds() {
+    private List<String> readProductIds() {
         String input = scanner.nextLine();
 
         return Arrays.stream(input.split(","))
                 .map(String::trim)
-                .map(Integer::parseInt)
                 .toList();
     }
 
-    private Order createOrder(List<Integer> productIds) {
-        return shopService.newOrder(productIds.toArray(new Integer[0]));
+    private Order createOrder(List<String> productIds) {
+        return shopService.newOrder(String.valueOf(productIds));
     }
 
     private void printSuccessMessage(Order order) {
@@ -80,7 +78,7 @@ public class Main {
 
         order.items()
                 .forEach(item ->
-                        System.out.printf("- %s (%d) x%d: %.2f €%n",
+                        System.out.printf("- %s (%s) x%d: %.2f €%n",
                                 item.product().name(),
                                 item.product().id(),
                                 item.quantity(),

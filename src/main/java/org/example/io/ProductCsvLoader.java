@@ -30,7 +30,7 @@ public class ProductCsvLoader {
     private Product parse(String line) {
         String[] parts = line.split(",");
 
-        int id = Integer.parseInt(parts[0]);
+        String id = parts[0];
         String name = parts[1];
         BigDecimal price = new BigDecimal(parts[2]);
         int availability = Integer.parseInt(parts[3]);

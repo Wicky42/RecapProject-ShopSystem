@@ -27,8 +27,8 @@ class ProductCsvLoaderTest {
         assertThat(products)
                 .isNotEmpty()
                 .hasSize(34)
-                .contains(new Product(1001, "Repair Shampoo Argan Oil", new BigDecimal("4.99"), 99))
-                .contains(new Product(8004, "Baby Diapers Size 2 (44pcs)", new BigDecimal("9.49"), 12));
+                .contains(new Product("1001", "Repair Shampoo Argan Oil", new BigDecimal("4.99"), 99))
+                .contains(new Product("8004", "Baby Diapers Size 2 (44pcs)", new BigDecimal("9.49"), 12));
     }
 
     @Test

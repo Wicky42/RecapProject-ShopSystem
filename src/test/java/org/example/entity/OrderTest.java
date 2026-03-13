@@ -12,7 +12,7 @@ class OrderTest {
 
     @Test
     void ship_shouldThrowException_whenCalledWithWrongStatus() {
-        Product p = new Product(1,"Product", BigDecimal.TEN, 99);
+        Product p = new Product("1","Product", BigDecimal.TEN, 99);
         OrderItem oi = new OrderItem(p, 2);
         Order order = new Order(1, List.of(oi), ZonedDateTime.now(), OrderStatus.IN_DELIVERY);
 
@@ -21,7 +21,7 @@ class OrderTest {
 
     @Test
     void completes_shouldThrowException_whenCalledWithWrongStatus() {
-        Product p = new Product(1,"Product", BigDecimal.TEN, 99);
+        Product p = new Product("1","Product", BigDecimal.TEN, 99);
         OrderItem oi = new OrderItem(p, 2);
         Order order = new Order(1, List.of(oi), ZonedDateTime.now(), OrderStatus.PROCESSING);
 

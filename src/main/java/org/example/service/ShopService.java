@@ -23,18 +23,18 @@ public class ShopService {
         this.orderRepo = orderRepo;
     }
 
-    public Order newOrder(Integer... ids) {
-        Map<Integer, Integer> quantities = new HashMap<>();
+    public Order newOrder(String... ids) {
+        Map<String, Integer> quantities = new HashMap<>();
 
-        for (Integer id : ids) {
+        for (String id : ids) {
             quantities.merge(id, 1, Integer::sum);
         }
 
         List<OrderItem> items = new ArrayList<>();
 
-        for (Map.Entry<Integer, Integer> entry : quantities.entrySet()) {
+        for (Map.Entry<String, Integer> entry : quantities.entrySet()) {
 
-            Integer id = entry.getKey();
+            String id = entry.getKey();
             int quantity = entry.getValue();
 
             Product product = productRepo.findById(id)

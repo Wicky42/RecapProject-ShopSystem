@@ -21,13 +21,13 @@ public class ProductRepo {
     public void add(Product product){
         products.add(product);
     }
-    public void deleteById(int id){
-        products.removeIf(p ->p.id() == id);
+    public void deleteById(String id){
+        products.removeIf(p ->p.id().equals(id));
     }
 
-    public Optional<Product> findById(int id){
+    public Optional<Product> findById(String id){
         return products.stream()
-                .filter(product -> product.id() == id)
+                .filter(product -> product.id().equals(id))
                 .findFirst();
     }
 
@@ -37,7 +37,7 @@ public class ProductRepo {
 
     public void update(Product updatedProduct) {
         for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).id() == updatedProduct.id()) {
+            if (products.get(i).id().equals( updatedProduct.id())) {
                 products.set(i, updatedProduct);
                 return;
             }
