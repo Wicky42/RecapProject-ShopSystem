@@ -15,7 +15,7 @@ public record Product(
             throw new IllegalArgumentException("Amount must be greater than 0");
         }
         if(amount > availablitity){
-            throw new ProductOutOfStockExcetion("Product " + id + " out of stock");
+            throw new ProductOutOfStockExcetion("Product " + name + " out of stock");
         }
         return new Product(id, name, price, (availablitity-amount));
     }

@@ -8,6 +8,7 @@ import org.example.repository.OrderMapRepo;
 import org.example.repository.OrderRepository;
 import org.example.repository.ProductRepo;
 import org.example.service.IdService;
+import org.example.service.ProductCatalogGenerator;
 import org.example.service.ShopService;
 import org.example.ui.ShopFxApp;
 
@@ -114,14 +115,15 @@ public class Main {
 //        Main app = new Main(productRepo, shopService);
 //        app.run();
 
-            ProductRepo productRepo = new ProductRepo();
-            OrderRepository orderRepo = new OrderMapRepo();
-            IdService idService = new IdService();
-            ShopService shopService = new ShopService(productRepo, orderRepo, idService);
+        ProductRepo productRepo = new ProductRepo();
+        OrderRepository orderRepo = new OrderMapRepo();
+        IdService idService = new IdService();
+        ShopService shopService = new ShopService(productRepo, orderRepo, idService);
 
-            // Demo-Produkte anlegen ...
+        ProductCatalogGenerator generator = new ProductCatalogGenerator(idService);
+        generator.generate(15).forEach(productRepo::add);
 
-            ShopFxApp.startApp(productRepo, shopService, args);
+        ShopFxApp.startApp(productRepo, shopService, args);
 
 
     }
