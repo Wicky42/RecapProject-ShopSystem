@@ -1,6 +1,6 @@
 package org.example.repository;
 
-import org.example.entity.Product;
+import org.example.domain.Product;
 
 import java.util.ArrayList;
 import java.util.List;

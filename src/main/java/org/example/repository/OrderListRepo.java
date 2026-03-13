@@ -1,13 +1,13 @@
 package org.example.repository;
 
-import org.example.entity.Order;
+import org.example.domain.Order;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class OrderListRepo implements OrderRepoInterface{
+public class OrderListRepo implements OrderRepository {
 
     private final List<Order> orders;
 
@@ -25,13 +25,13 @@ public class OrderListRepo implements OrderRepoInterface{
         orders.add(order);
     }
     @Override
-    public void deleteById(int id){
-        orders.removeIf(o -> o.id() == id);
+    public void deleteById(String id){
+        orders.removeIf(o -> o.id().equals(id));
     }
 
     @Override
-    public Optional<Order> findById(int id){
-        return orders.stream().filter(o -> o.id() == id).findFirst();
+    public Optional<Order> findById(String id){
+        return orders.stream().filter(o -> o.id().equals(id)).findFirst();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class OrderListRepo implements OrderRepoInterface{
 
     @Override
     public void update(Order shippedOrder) {
-        orders.removeIf(o -> o.id() == shippedOrder.id());
+        orders.removeIf(o -> o.id().equals( shippedOrder.id()));
         orders.add(shippedOrder);
     }
 

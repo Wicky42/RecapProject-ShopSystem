@@ -1,11 +1,15 @@
 package org.example;
 
-import org.example.entity.Order;
-import org.example.entity.Product;
+import org.example.domain.Order;
+import org.example.domain.Product;
 import org.example.io.ProductCsvLoader;
 import org.example.repository.OrderListRepo;
+import org.example.repository.OrderMapRepo;
+import org.example.repository.OrderRepository;
 import org.example.repository.ProductRepo;
+import org.example.service.IdService;
 import org.example.service.ShopService;
+import org.example.ui.ShopFxApp;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -68,7 +72,7 @@ public class Main {
     }
 
     private Order createOrder(List<String> productIds) {
-        return shopService.newOrder(String.valueOf(productIds));
+        return shopService.newOrder(productIds.toArray(String[]::new));
     }
 
     private void printSuccessMessage(Order order) {
@@ -98,16 +102,26 @@ public class Main {
     }
 
     static void main(String[] args) throws IOException {
-        ProductCsvLoader loader = new ProductCsvLoader();
+//        ProductCsvLoader loader = new ProductCsvLoader();
+//
+//        ProductRepo productRepo = new ProductRepo();
+//        loader.load("productCatalog.csv").forEach(productRepo::add);
+//
+//        OrderListRepo orderRepo = new OrderListRepo();
+//        IdService idService = new IdService();
+//        ShopService shopService = new ShopService(productRepo, orderRepo, idService);
+//
+//        Main app = new Main(productRepo, shopService);
+//        app.run();
 
-        ProductRepo productRepo = new ProductRepo();
-        loader.load("productCatalog.csv").forEach(productRepo::add);
+            ProductRepo productRepo = new ProductRepo();
+            OrderRepository orderRepo = new OrderMapRepo();
+            IdService idService = new IdService();
+            ShopService shopService = new ShopService(productRepo, orderRepo, idService);
 
-        OrderListRepo orderRepo = new OrderListRepo();
-        ShopService shopService = new ShopService(productRepo, orderRepo);
+            // Demo-Produkte anlegen ...
 
-        Main app = new Main(productRepo, shopService);
-        app.run();
+            ShopFxApp.startApp(productRepo, shopService, args);
 
 
     }

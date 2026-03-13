@@ -1,14 +1,18 @@
 package org.example.service;
 
-import org.example.entity.Order;
-import org.example.entity.OrderStatus;
-import org.example.entity.Product;
+import org.example.domain.Order;
+import org.example.domain.OrderItem;
+import org.example.domain.OrderStatus;
+import org.example.domain.Product;
+import org.example.domain.exceptions.ProductOutOfStockExcetion;
 import org.example.repository.OrderListRepo;
 import org.example.repository.ProductRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,6 +20,7 @@ class ShopServiceTest {
 
     ProductRepo productRepo;
     OrderListRepo orderRepo;
+    IdService idService;
     ShopService service;
 
 
@@ -23,7 +28,8 @@ class ShopServiceTest {
     void setup(){
         productRepo = new ProductRepo();
         orderRepo = new OrderListRepo();
-        service = new ShopService(productRepo, orderRepo);
+        idService = new IdService();
+        service = new ShopService(productRepo, orderRepo, idService);
     }
 
     @Test
@@ -40,8 +46,8 @@ class ShopServiceTest {
 
     @Test
     void getOrdersWithStatus_shouldreturnAListOfOrdersWithCallesStatus(){
-        productRepo.add(new Product("1", "Laptop", BigDecimal.TEN, 99));
-        productRepo.add(new Product("2", "Phone", BigDecimal.valueOf(699.99), 99));
+        service.addProduct(new Product("1", "Laptop", BigDecimal.TEN, 99));
+        service.addProduct(new Product("2", "Phone", BigDecimal.valueOf(699.99), 99));
         Order order1 = service.newOrder("1");
         Order order2= service.newOrder("2");
 
@@ -67,6 +73,13 @@ class ShopServiceTest {
         Order completedOrder = service.completeOrder(shipped.id());
         assertEquals(1, service.getOrdersWithStatus(OrderStatus.COMPLETED).size());
         assertTrue(service.getOrdersWithStatus(OrderStatus.COMPLETED).contains(completedOrder));
+    }
+
+    @Test
+    void newOrder_shouldThrowProductOutOfStockException_whenOrderHasMorehanAvailable(){
+        Product product = new Product(idService.newProductId(), "TestProduct", BigDecimal.TEN, 2);
+        service.addProduct(product);
+        assertThrows(ProductOutOfStockExcetion.class, ()->service.newOrder(product.id(), product.id(), product.id()));
     }
 
 }

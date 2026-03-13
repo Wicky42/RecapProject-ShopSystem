@@ -1,5 +1,6 @@
-package org.example.entity;
+package org.example.domain;
 
+import org.example.service.IdService;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -14,7 +15,8 @@ class OrderTest {
     void ship_shouldThrowException_whenCalledWithWrongStatus() {
         Product p = new Product("1","Product", BigDecimal.TEN, 99);
         OrderItem oi = new OrderItem(p, 2);
-        Order order = new Order(1, List.of(oi), ZonedDateTime.now(), OrderStatus.IN_DELIVERY);
+        IdService idService = new IdService();
+        Order order = new Order(idService.newOrderId(), List.of(oi), ZonedDateTime.now(), OrderStatus.IN_DELIVERY);
 
         assertThrows(IllegalStateException.class, order::ship);
     }
@@ -23,7 +25,8 @@ class OrderTest {
     void completes_shouldThrowException_whenCalledWithWrongStatus() {
         Product p = new Product("1","Product", BigDecimal.TEN, 99);
         OrderItem oi = new OrderItem(p, 2);
-        Order order = new Order(1, List.of(oi), ZonedDateTime.now(), OrderStatus.PROCESSING);
+        IdService idService = new IdService();
+        Order order = new Order(idService.newOrderId(), List.of(oi), ZonedDateTime.now(), OrderStatus.PROCESSING);
 
         assertThrows(IllegalStateException.class, order::complete);
     }

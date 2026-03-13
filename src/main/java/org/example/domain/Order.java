@@ -1,14 +1,14 @@
-package org.example.entity;
+package org.example.domain;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 public record Order(
-        int id,
+        String id,
         List<OrderItem> items,
         ZonedDateTime timeStamp,
-        OrderStatus orderStatus
+        OrderStatus status
 ) {
 
     public BigDecimal total(){
@@ -18,10 +18,10 @@ public record Order(
     }
 
     public Order ship(){
-        return new Order(id, items, timeStamp, orderStatus.ship());
+        return new Order(id, items, timeStamp, status.ship());
     }
 
     public Order complete(){
-        return new Order(id, items, timeStamp, orderStatus.complete());
+        return new Order(id, items, timeStamp, status.complete());
     }
 }

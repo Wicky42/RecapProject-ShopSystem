@@ -1,19 +1,18 @@
 package org.example.repository;
 
-import org.example.entity.Order;
-import org.example.entity.Product;
+import org.example.domain.Order;
 
 import java.util.*;
 
-public class OrderMapRepo implements OrderRepoInterface{
+public class OrderMapRepo implements OrderRepository {
 
-    private final Map< Integer, Order> orders;
+    private final Map< String, Order> orders;
 
     public OrderMapRepo() {
         orders = new HashMap<>();
     }
 
-    public OrderMapRepo(Map<Integer, Order> orders) {
+    public OrderMapRepo(Map<String, Order> orders) {
         this.orders = orders;
     }
 
@@ -24,12 +23,12 @@ public class OrderMapRepo implements OrderRepoInterface{
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(String id) {
         orders.remove(id);
     }
 
     @Override
-    public Optional<Order> findById(int id) {
+    public Optional<Order> findById(String id) {
         return Optional.ofNullable(orders.get(id));
     }
 

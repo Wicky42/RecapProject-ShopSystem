@@ -1,4 +1,4 @@
-package org.example.entity.exceptions;
+package org.example.domain.exceptions;
 
 public class OrderNotFoundException extends RuntimeException{
     public OrderNotFoundException(){

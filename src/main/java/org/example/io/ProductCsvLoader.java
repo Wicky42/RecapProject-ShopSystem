@@ -1,6 +1,6 @@
 package org.example.io;
 
-import org.example.entity.Product;
+import org.example.domain.Product;
 
 import java.io.BufferedReader;
 import java.io.IOException;

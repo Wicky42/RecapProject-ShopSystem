@@ -1,11 +1,11 @@
 package org.example.service;
 
-import org.example.entity.Order;
-import org.example.entity.OrderItem;
-import org.example.entity.OrderStatus;
-import org.example.entity.Product;
-import org.example.entity.exceptions.OrderNotFoundException;
-import org.example.repository.OrderRepoInterface;
+import org.example.domain.Order;
+import org.example.domain.OrderItem;
+import org.example.domain.OrderStatus;
+import org.example.domain.Product;
+import org.example.domain.exceptions.OrderNotFoundException;
+import org.example.repository.OrderRepository;
 import org.example.repository.ProductRepo;
 
 import java.time.ZonedDateTime;
@@ -14,13 +14,20 @@ import java.util.*;
 public class ShopService {
 
     private final ProductRepo productRepo;
-    private final OrderRepoInterface orderRepo;
+    private final OrderRepository orderRepo;
 
-    private static int nextOrderId = 12345;
+//    private static int nextOrderId = 12345;
 
-    public ShopService(ProductRepo productRepo, OrderRepoInterface orderRepo) {
+    private final IdService idService;
+
+    public ShopService(ProductRepo productRepo, OrderRepository orderRepo, IdService idService) {
         this.productRepo = productRepo;
         this.orderRepo = orderRepo;
+        this.idService = idService;
+    }
+
+    public void addProduct(Product product){
+        productRepo.add(product);
     }
 
     public Order newOrder(String... ids) {
@@ -46,7 +53,7 @@ public class ShopService {
             items.add(new OrderItem(product, quantity));
         }
 
-        Order order = new Order(nextOrderId++, items, ZonedDateTime.now(), OrderStatus.PROCESSING);
+        Order order = new Order(idService.newOrderId(), items, ZonedDateTime.now(), OrderStatus.PROCESSING);
         orderRepo.add(order);
 
         return order;
@@ -55,11 +62,11 @@ public class ShopService {
 
     public List<Order> getOrdersWithStatus(OrderStatus orderStatus) {
         return orderRepo.findAll().stream()
-                .filter(o -> o.orderStatus() == orderStatus)
+                .filter(o -> o.status() == orderStatus)
                 .toList();
     }
 
-    public Order shipOrder(int id){
+    public Order shipOrder(String id){
         Order order = orderRepo.findById(id)
                 .orElseThrow(OrderNotFoundException::new);
         Order shippedOrder = order.ship();
@@ -68,7 +75,7 @@ public class ShopService {
         return shippedOrder;
     }
 
-    public Order completeOrder(int id){
+    public Order completeOrder(String id){
         Order order = orderRepo.findById(id)
                 .orElseThrow(OrderNotFoundException::new);
         Order completedOrder = order.complete();

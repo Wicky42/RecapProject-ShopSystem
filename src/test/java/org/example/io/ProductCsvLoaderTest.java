@@ -1,6 +1,6 @@
 package org.example.io;
 
-import org.example.entity.Product;
+import org.example.domain.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
